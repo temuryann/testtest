@@ -1,24 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Location Tracker</title>
+  <title>Real-Time GPS Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <style>
+    #map { height: 100vh; }
+  </style>
 </head>
 <body>
-  <h1>Welcome!</h1>
-  <p>Please allow location access to continue.</p>
+  <div id="map"></div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        const accuracy = position.coords.accuracy;
-        alert(`Latitude: ${lat}, Longitude: ${lon}, Accuracy: ${accuracy} meters`);
-        // You can send this data to your server here
+    // Initialize map
+    const map = L.map('map').setView([0, 0], 13);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Marker for user location
+    const marker = L.marker([0, 0]).addTo(map);
+
+    // Watch position
+    navigator.geolocation.watchPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        marker.setLatLng([lat, lon]);
+        map.setView([lat, lon], 16);
       },
-      error => {
-        alert('Error obtaining location: ' + error.message);
+      (err) => {
+        alert('Location access denied or error: ' + err.message);
       },
       {
         enableHighAccuracy: true,
