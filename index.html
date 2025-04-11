@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Location Tracker</title>
+</head>
+<body>
+  <h1>Welcome!</h1>
+  <p>Please allow location access to continue.</p>
+
+  <script>
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
+        alert(`Latitude: ${lat}, Longitude: ${lon}, Accuracy: ${accuracy} meters`);
+        // You can send this data to your server here
+      },
+      error => {
+        alert('Error obtaining location: ' + error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
+  </script>
+</body>
+</html>
